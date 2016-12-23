@@ -173,8 +173,7 @@ public class IZIServlet extends HttpServlet {
 
 				Connection con = getConnection();
 				String sql = "INSERT INTO dbo.Consumption VALUES ('" + animal + "','" + feedDate + "','" + feedTime
-						+ "','" + quantityGiven + "', case when @wastage is null then '0' else @wastage END" + ",'"
-						+ zooName + "')";
+						+ "','" + quantityGiven + "','" + zooName + "')";
 				PreparedStatement pStatement = con.prepareStatement(sql);
 				int rs = pStatement.executeUpdate();
 				if (rs > 0) {
