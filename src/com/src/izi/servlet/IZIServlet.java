@@ -20,12 +20,20 @@ import org.json.JSONObject;
 import com.src.izi.constants.IZIConstants;
 
 /**
- * Servlet implementation class IZIServlet
+ * The purpose of this abstract class that implements the Servlet interface and
+ * is specially designed to handle HTTP requests.
+ *
+ * @author Nagarjun Singharavelu
+ * @version 2.0
+ * @since 2016-12-23
  */
 public class IZIServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * This is the constructor which invokes Object class by default.
+	 * 
+	 * @return Nothing.
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public IZIServlet() {
@@ -33,6 +41,13 @@ public class IZIServlet extends HttpServlet {
 	}
 
 	/**
+	 * This is the GET method which reads values from JSF page.
+	 * 
+	 * @param request,
+	 *            response
+	 * @return Nothing.
+	 * @exception IOException,
+	 *                ServletException On input error.
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
@@ -43,6 +58,13 @@ public class IZIServlet extends HttpServlet {
 	}
 
 	/**
+	 * This is the POST method which posts values from JSF page.
+	 * 
+	 * @param request,
+	 *            response
+	 * @return Nothing.
+	 * @exception IOException,
+	 *                ServletException On input error.
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
@@ -58,6 +80,16 @@ public class IZIServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * This method creates an alert box and notifies the user when a particular
+	 * user action is successful or failed.
+	 * 
+	 * @param resp,
+	 *            msg
+	 * @return Nothing.
+	 * @exception IOException
+	 *                On input error.
+	 */
 	private void response(HttpServletResponse resp, String msg) throws IOException {
 		PrintWriter out = resp.getWriter();
 		out.println("<script type=\"text/javascript\">");
@@ -66,6 +98,16 @@ public class IZIServlet extends HttpServlet {
 		out.println("</script>");
 	}
 
+	/**
+	 * This method is being invoked from doGet method. The purpose of this
+	 * method is store all user inputs from newItems.jsp file into the database
+	 * 
+	 * @param req,
+	 *            res
+	 * @return Nothing.
+	 * @exception IOException
+	 *                On input error.
+	 */
 	private void newItems(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		String inventoryQuantity = req.getParameter(IZIConstants.INV_QUANTITY);
 		String itemDate = req.getParameter(IZIConstants.ITEM_DATE);
@@ -99,6 +141,17 @@ public class IZIServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * This method is being invoked from doGet method. The purpose of this
+	 * method is store all user inputs from updateInventory.jsp file into the
+	 * database
+	 * 
+	 * @param req,
+	 *            res
+	 * @return Nothing.
+	 * @exception IOException
+	 *                On input error.
+	 */
 	private void updateInventory(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		String animal = req.getParameter(IZIConstants.ANIMAL_NAME);
 		String feedDate = req.getParameter(IZIConstants.FEED_DATE);
@@ -137,6 +190,17 @@ public class IZIServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * This method is being invoked from doPost method. The purpose of this
+	 * method is retrieve all inventory activities from database to the
+	 * viewInventory1.jsp file.
+	 * 
+	 * @param req,
+	 *            res
+	 * @return Nothing.
+	 * @exception IOException,
+	 *                ServletException On input error.
+	 */
 	private void viewInventory(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		String animal = req.getParameter(IZIConstants.ANIMAL_NAME);
 		String zName = req.getParameter("zooName");
@@ -154,8 +218,8 @@ public class IZIServlet extends HttpServlet {
 				ResultSet rs = pStatement.executeQuery();
 				while (rs.next()) {
 					req.setAttribute(IZIConstants.ANIMAL_NAME, rs.getString("Animal"));
-					req.setAttribute("feedTimes", rs.getString("Cnt"));
-					req.setAttribute("quantityFed", rs.getString("AvgQuantity"));
+					req.setAttribute(IZIConstants.FEED_TIMES, rs.getString("Cnt"));
+					req.setAttribute(IZIConstants.QUANTITY_FED, rs.getString("AvgQuantity"));
 				}
 				con.close();
 
@@ -168,8 +232,8 @@ public class IZIServlet extends HttpServlet {
 				pStatement1 = conn.prepareStatement(sql1);
 				ResultSet rs1 = pStatement1.executeQuery();
 				while (rs1.next()) {
-					req.setAttribute("zooName", zName);
-					req.setAttribute("foodWaste", rs1.getString("Diff"));
+					req.setAttribute(IZIConstants.ZOO_NAME, zName);
+					req.setAttribute(IZIConstants.FOOD_WASTE, rs1.getString("Diff"));
 				}
 				conn.close();
 
@@ -182,6 +246,15 @@ public class IZIServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * This method creates database connection and is being used by other
+	 * methods whenever there is a database operation involved.
+	 * 
+	 * @param NULL
+	 * @return conn
+	 * @exception ClassNotFoundException,
+	 *                SQLException On SQL connection error.
+	 */
 	public Connection getConnection() {
 		Connection conn = null;
 		try {
