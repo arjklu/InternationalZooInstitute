@@ -236,6 +236,30 @@ public class IZIServlet extends HttpServlet {
 				}
 				conn.close();
 
+				Connection con2 = getConnection();
+				String sql2 = "declare @avgQuantity float; "
+						+ "SET @avgQuantity = (Select AVG(CONVERT(INTEGER,Quantity)) from dbo.Consumption "
+						+ "where Animal='"+ animal +"' and ZooName='"+ zName +"'); "
+						+ "Select (Select count(*) from dbo.Consumption "
+						+ "where (Convert(Integer,Quantity) > @avgQuantity and Animal='"+ animal +"' and ZooName='"+ zName +"')) as fCount,"
+						+ "(Select count(*) from dbo.Consumption where Animal='"+ animal +"' and ZooName='"+ zName +"') as orgCount";
+
+				PreparedStatement pStatement2;
+				pStatement2 = con2.prepareStatement(sql2);
+				ResultSet rs2 = pStatement2.executeQuery();
+				while (rs2.next()) {
+					float orgCount = Float.parseFloat(rs2.getString("orgCount"));
+					float fCount = Float.parseFloat(rs2.getString("fCount"));
+					float percentDiff = (fCount/orgCount)*100;
+					String pDiff = Float.toString(percentDiff);
+					if(fCount > orgCount){
+						req.setAttribute("percentDiff", "more (" + pDiff + "%)");
+					} else {
+						req.setAttribute("percentDiff", "less (" + pDiff + "%)");
+					}
+				}
+				con2.close();
+
 				RequestDispatcher rd = req.getRequestDispatcher("/viewInventory1.jsp");
 				rd.forward(req, res);
 
