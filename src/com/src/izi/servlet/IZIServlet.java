@@ -202,7 +202,7 @@ public class IZIServlet extends HttpServlet {
 	 */
 	private void viewInventory(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		String animal = req.getParameter(IZIConstants.ANIMAL_NAME);
-		String zName = req.getParameter("zooName");
+		String zName = req.getParameter(IZIConstants.ZOO_NAME);
 
 		if (animal.equals("") || zName.equals("")) {
 			response(res, IZIConstants.CHECK_INPUT_MSG);
@@ -239,10 +239,11 @@ public class IZIServlet extends HttpServlet {
 				Connection con2 = getConnection();
 				String sql2 = "declare @avgQuantity float; "
 						+ "SET @avgQuantity = (Select AVG(CONVERT(INTEGER,Quantity)) from dbo.Consumption "
-						+ "where Animal='"+ animal +"' and ZooName='"+ zName +"'); "
+						+ "where Animal='" + animal + "' and ZooName='" + zName + "'); "
 						+ "Select (Select count(*) from dbo.Consumption "
-						+ "where (Convert(Integer,Quantity) > @avgQuantity and Animal='"+ animal +"' and ZooName='"+ zName +"')) as fCount,"
-						+ "(Select count(*) from dbo.Consumption where Animal='"+ animal +"' and ZooName='"+ zName +"') as orgCount";
+						+ "where (Convert(Integer,Quantity) > @avgQuantity and Animal='" + animal + "' and ZooName='"
+						+ zName + "')) as fCount," + "(Select count(*) from dbo.Consumption where Animal='" + animal
+						+ "' and ZooName='" + zName + "') as orgCount";
 
 				PreparedStatement pStatement2;
 				pStatement2 = con2.prepareStatement(sql2);
@@ -250,12 +251,12 @@ public class IZIServlet extends HttpServlet {
 				while (rs2.next()) {
 					float orgCount = Float.parseFloat(rs2.getString("orgCount"));
 					float fCount = Float.parseFloat(rs2.getString("fCount"));
-					float percentDiff = (fCount/orgCount)*100;
+					float percentDiff = (fCount / orgCount) * 100;
 					String pDiff = Float.toString(percentDiff);
-					if(fCount > orgCount){
-						req.setAttribute("percentDiff", "more (" + pDiff + "%)");
+					if (fCount > orgCount) {
+						req.setAttribute(IZIConstants.PERCENTAGE_DIFF, "more (" + pDiff + "%)");
 					} else {
-						req.setAttribute("percentDiff", "less (" + pDiff + "%)");
+						req.setAttribute(IZIConstants.PERCENTAGE_DIFF, "less (" + pDiff + "%)");
 					}
 				}
 				con2.close();

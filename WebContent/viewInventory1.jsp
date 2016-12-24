@@ -63,8 +63,14 @@
 		</table>
 		<p></p>
 		<center>
-		<% String pDiff = (String) request.getAttribute("percentDiff");%>
-			<p>This animal is being fed by <%= pDiff%> than the average.</p>
+			<%
+				String pDiff = (String) request.getAttribute("percentDiff");
+			%>
+			<p>
+				This animal is being fed by
+				<%=pDiff%>
+				than the average.
+			</p>
 		</center>
 		<p></p>
 		<center>

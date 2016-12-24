@@ -27,5 +27,6 @@ public final class IZIConstants {
 	public static final String INV_MAP = "invMap";
 	public static final String CON_MAP = "conMap";
 	public static final String FEED_TIMES = "feedTimes";
+	public static final String PERCENTAGE_DIFF = "percentDiff";
 	public static final String ERROR_MSG = "Inventory not updated. Please contact system administrator.";
 }
